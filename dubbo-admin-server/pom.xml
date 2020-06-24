@@ -180,6 +180,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.0.2.RELEASE</version>
+                <configuration>
+                    <mainClass>org.apache.dubbo.admin.DubboAdminApplication</mainClass>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>

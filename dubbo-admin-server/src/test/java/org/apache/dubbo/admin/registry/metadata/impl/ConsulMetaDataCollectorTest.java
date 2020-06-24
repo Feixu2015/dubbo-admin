@@ -28,10 +28,7 @@ import org.apache.dubbo.metadata.definition.model.FullServiceDefinition;
 import org.apache.dubbo.metadata.definition.model.MethodDefinition;
 import org.apache.dubbo.metadata.definition.util.ClassUtils;
 import org.apache.dubbo.metadata.identifier.MetadataIdentifier;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -63,6 +60,7 @@ public class ConsulMetaDataCollectorTest {
     }
 
     @Test
+    @Ignore
     public void testGetProviderMetaData() {
         MetadataIdentifier identifier = buildIdentifier(true);
 
@@ -94,6 +92,7 @@ public class ConsulMetaDataCollectorTest {
 
 
     @Test
+    @Ignore
     public void testGetConsumerMetaData() {
         MetadataIdentifier identifier = buildIdentifier(false);
 

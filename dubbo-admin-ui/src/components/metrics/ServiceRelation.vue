@@ -16,7 +16,7 @@
   -->
 
 <template>
-  <v-container grid-list-xl fluid >
+  <v-container grid-list-xl fluid>
     <v-layout row wrap>
       <v-flex lg12>
         <breadcrumb title="serviceRelation" :items="breads"></breadcrumb>
@@ -25,15 +25,13 @@
 
     <v-flex lg12>
       <v-card>
-          <div id="chartContent" style="width:100%;height:500%;"/>
+        <div id="chartContent" style="width:100%;height:600%;" />
       </v-card>
     </v-flex>
-
   </v-container>
-
 </template>
 <script>
-  import Breadcrumb from '@/components/public/Breadcrumb'
+  import Breadcrumb from "@/components/public/Breadcrumb";
   export default {
     components: {
       Breadcrumb
@@ -42,74 +40,75 @@
       success: null,
       breads: [
         {
-          text: 'serviceMetrics',
-          href: ''
+          text: "serviceMetrics",
+          href: ""
         },
         {
-          text: 'serviceRelation',
-          href: ''
+          text: "serviceRelation",
+          href: ""
         }
       ],
       responseData: null
     }),
     methods: {
-      initData: function () {
+      initData: function() {
         // eslint-disable-next-line no-undef
-        this.chartContent = echarts.init(document.getElementById('chartContent'))
-        this.chartContent.showLoading()
-        this.$axios.get('/metrics/relation')
+        this.chartContent = echarts.init(document.getElementById("chartContent"));
+        this.chartContent.showLoading();
+        this.$axios
+          .get("/metrics/relation")
           .then(response => {
             if (response && response.status === 200) {
-              this.success = true
-              this.responseData = response.data
-              this.responseData.type = 'force'
-              this.initChart(this.responseData)
+              this.success = true;
+              this.responseData = response.data;
+              this.responseData.type = "force";
+              this.initChart(this.responseData);
             }
           })
           .catch(error => {
-            this.success = false
-            this.responseData = error.response.data
-          })
+            this.success = false;
+            this.responseData = error.response.data;
+          });
       },
-      initChart: function (data) {
-        this.chartContent.hideLoading()
-
+      initChart: function(data) {
+        this.chartContent.hideLoading();
+        const links = [...this.responseData.links];
         const option = {
           legend: {
-            top: 'bottom',
             data: data.categories.map(i => i.name)
           },
-          series: [{
-            type: 'graph',
-            layout: 'force',
-            animation: false,
-            label: {
-              normal: {
-                show: true,
-                position: 'right'
-              }
-            },
-            draggable: true,
-            data: data.nodes.map(function (node, idx) {
-              node.id = idx
-              return node
-            }),
-            categories: this.responseData.categories,
-            force: {
-              edgeLength: 100,
-              repulsion: 10
-            },
-            edges: data.links,
-            edgeSymbol: ['', 'arrow'],
-            edgeSymbolSize: 7
-          }]
-        }
-        this.chartContent.setOption(option)
+          animationDurationUpdate: 1000,
+          animationEasingUpdate: "quinticInOut",
+          series: [
+            {
+              type: "graph",
+              layout: "force",
+              symbolSize: 20,
+              draggable: true,
+              label: {
+                show: true
+              },
+              force: {
+                repulsion : 100,//节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
+                gravity : 0.03,//节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
+                edgeLength :100,//边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] 。值越大则长度越长
+                layoutAnimation : true
+              },
+              edgeSymbol: ["", "arrow"],
+              data: data.nodes.map(function(node, idx) {
+                node.id = idx;
+                return node;
+              }),
+              categories: this.responseData.categories,
+              links
+            }
+          ]
+        };
+        this.chartContent.setOption(option);
       }
     },
-    mounted: function () {
-      this.initData()
+    mounted: function() {
+      this.initData();
     }
-
-  }
+  };
 </script>
