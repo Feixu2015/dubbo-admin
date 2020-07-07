@@ -73,6 +73,21 @@
       initChart: function(data) {
         this.chartContent.hideLoading();
         const links = [...this.responseData.links];
+        data.nodes.forEach((node, index) => {
+          const old = node.index;
+          links.forEach(link => {
+            if (!link.sourceChanged && link.source === old) {
+              link.source = index
+              link.sourceChanged = true
+            }
+            if (!link.targetChanged && link.target === old) {
+              link.target = index
+              link.targetChanged = true
+            }
+          })
+          node.index = index
+        })
+        console.log('links:', links);
         const option = {
           legend: {
             data: data.categories.map(i => i.name)
