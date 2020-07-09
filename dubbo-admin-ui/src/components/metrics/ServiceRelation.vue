@@ -73,9 +73,91 @@
       initChart: function(data) {
         this.chartContent.hideLoading();
         const links = [...this.responseData.links];
+        const colors = [
+          'Black',
+          'Blue',
+          'BlueViolet',
+          'Brown',
+          'BurlyWood',
+          'Chocolate',
+          'Coral',
+          'Crimson',
+          'Cyan',
+          'DeepPink',
+          'DeepSkyBlue',
+          'DimGray',
+          'DodgerBlue',
+          'Feldspar',
+          'FireBrick',
+          'FloralWhite',
+          'ForestGreen',
+          'Fuchsia',
+          'Gainsboro',
+          'GhostWhite',
+          'Gold',
+          'GoldenRod',
+          'Gray',
+          'Green',
+          'GreenYellow',
+          'HoneyDew',
+          'HotPink',
+          'IndianRed',
+          'Indigo',
+          'Ivory',
+          'Khaki',
+          'Lavender',
+          'LavenderBlush',
+          'LawnGreen',
+          'LemonChiffon',
+          'Lime',
+          'LimeGreen',
+          'Linen',
+          'Magenta',
+          'Maroon',
+          'MidnightBlue',
+          'MintCream',
+          'MistyRose',
+          'Moccasin',
+          'Navy',
+          'OldLace',
+          'Olive',
+          'OliveDrab',
+          'Orange',
+          'OrangeRed',
+          'Orchid',
+          'PaleGoldenRod',
+          'PaleGreen',
+          'PaleTurquoise',
+          'PaleVioletRed',
+          'PapayaWhip',
+          'PeachPuff',
+          'Peru',
+          'Pink',
+          'PowderBlue',
+          'Purple',
+          'Red',
+          'RosyBrown',
+          'RoyalBlue',
+          'SaddleBrown',
+          'SandyBrown',
+          'SeaGreen',
+          'SkyBlue',
+          'SlateBlue',
+          //'Snow',
+          'SpringGreen',
+          'SteelBlue',
+          'VioletRed',
+          'Yellow'
+        ]
+        const random = (min, max) => {
+          const imin = Math.ceil(min);
+          const imax = Math.floor(max);
+          return Math.floor(Math.random() * (imax - imin)) + imin;
+        }
+        const doubled = [];
         data.nodes.forEach((node, index) => {
           const old = node.index;
-          links.forEach(link => {
+          links.forEach((link, li) => {
             if (!link.sourceChanged && link.source === old) {
               link.source = index
               link.sourceChanged = true
@@ -84,6 +166,16 @@
               link.target = index
               link.targetChanged = true
             }
+            let curveness = 0;
+            if (-1 !== doubled.findIndex(it => it === `${link.target}_${link.source}`)) {
+              curveness = 0.3;
+            }
+            link.lineStyle = {
+              color: colors[random(0, data.nodes.length)],
+              width: 1,
+              curveness: curveness
+            }
+            doubled.push(`${link.source}_${link.target}`);
           })
           node.index = index
         })
